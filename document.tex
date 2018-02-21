@@ -1,0 +1,88 @@
+\documentclass[12pt]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+
+\newcommand{\E}{\mathop{\rm E}\nolimits} %expectation
+\newcommand{\SE}{\mathop{\rm SE}\nolimits} %Standard Errors
+\newcommand{\Var}{\mathop{\rm Var}\nolimits} %variance
+\newcommand{\var}{\mathop{\rm var}\nolimits} %variance
+
+\pagestyle{plain}
+\setcounter{secnumdepth}{0}
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Solution}
+\newtheorem{summary}[theorem]{Summary}
+\begin{document}
+	
+	\begin{center}
+		{\Large 2017/2/22 Meeting Preparation}\\
+	\end{center}
+	\begin{center}
+		{\Large Kyu Hyun Kim}	
+	\end{center}
+
+	\begin{itemize}
+		\item[1.] Answer for comments
+			\begin{itemize}
+				\item[1)] Consistent?\\
+				- Even if using different $\Gamma$, estimated $\hat{\beta}$ would converge to real value through iteration.
+				\item[2)] How to making new convex object function?\\
+				\begin{itemize}
+					\item[-] First estimating equation from (Tsiatis(1990))\\
+						\begin{center}
+						$W_{n}(\beta)=\sum_{i=1}^{n}w_{i}(\beta)\Delta_{i}[X_{i}-\frac{\sum_{j=1}^{n}X_{j}I[e_{j}(\beta)\ge e_{i}(\beta)]}{\sum_{j=1}^{n}I[e_{j}(\beta)\ge e_{i}(\beta)]}]=0$
+						\end{center}
+					\item[-] Typically, solution for $W_{n}(\beta)=0$ is not exist. Therefore we have to find generalized solution which is the $\beta$that satisfies $\min\lVert W_{n}(\beta) \rVert$.\\
+					
+					\item[-] Use Gehan weight function($\sum_{i=1}^{n}I[e_{j}(\beta)\ge e_{i}(\beta)]$) as a $w_{i}(\beta)$ to make $W_{n}(\beta)$ monotone function\\
+						\begin{center}
+						$W_{n}(\beta)=\sum_{i=1}^{n}\sum_{j=1}^{n}\Delta_{i}(X_{i}-X_{j})I[e_{j}(\beta)-e_{i}(\beta)\ge 0]$
+						\end{center}
+					\item[-] $\because e_{j}(\beta)-e_{i}(\beta)=(\log(T_j)-X_j\beta)-(\log(T_i)-X_i\beta)$, new objective function has same generalized solution with $W_{i}(\beta)$\\
+						\begin{center}
+						$O_{n}(\beta)=\sum_{i=1}^{n}\sum_{j=1}^{n}\Delta_{i}(e_j-e_i)I[e_{j}(\beta)-e_{i}(\beta)\ge 0]$
+						\end{center}
+					\item[-] Find $\beta$ minimizing $O_{n}(\beta)$
+				\end{itemize}
+		\newpage
+		\item[2.]Applying induced smoothing method to Quantile residual life model fitting estimating equation (Kim et al.(2012))\\
+		Estimaitng Equation\\
+		\begin{center}
+			$S(\beta)=\sum_{i=1}^{n}w_i I[Z_i>t_0]X_i \psi_\tau\{\log(Z_i - t_0)-X_i^T\beta\}=0$
+		\end{center}
+		Using induced smoothing\\
+		\begin{align*}
+			\bar{S}(\beta) & =E_z[S(\beta+\Gamma^\frac{1}{2}Z)]\\
+			&=E_Z[\sum_{i=1}^{n}w_i I[Z_i>t_0]X_i \psi_\tau\{\log(Z_i - t_0)-X_i^T(\beta+\Gamma^\frac{1}{2}Z)\}]\\
+			&=E_Z[\sum_{i=1}^{n}w_i I[Z_i>t_0]X_i (\tau-I\{\log(Z_i - t_0)-X_i^T(\beta+\Gamma^\frac{1}{2}Z)\le0\})]\\
+			&=\sum_{i=1}^{n}w_i I[Z_i>t_0]X_i (\tau-E_z[I\{\log(Z_i - t_0)-X_i^T(\beta+\Gamma^\frac{1}{2}Z)\le0\}])\\
+			&=\sum_{i=1}^{n}w_i I[Z_i>t_0]X_i (\tau-P[X_i^T\Gamma^\frac{1}{2} Z \ge \log(Z_i-t_0)-X_i^T\beta])\\			&=\sum_{i=1}^{n}w_i I[Z_i>t_0]X_i (\tau-P[Z \ge \frac{\log(Z_i-t_0)-X_i^T\beta}{\sqrt{X_i^T\Gamma X_i}}])\\
+			&=\sum_{i=1}^{n}w_i I[Z_i>t_0]X_i (\tau-1+\Phi(\frac{\log(Z_i-t_0)-X_i^T\beta}{\sqrt{X_i^T\Gamma X_i}}))		
+		\end{align*}
+			
+			
+		
+		
+		\end{itemize}
+	\end{itemize}
+\end{document}
