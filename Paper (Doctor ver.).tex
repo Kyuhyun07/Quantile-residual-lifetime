@@ -1,0 +1,546 @@
+\documentclass[12pt]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{float}
+
+\newcommand{\E}{\mathop{\rm E}\nolimits} %expectation
+\newcommand{\SE}{\mathop{\rm SE}\nolimits} %Standard Errors
+\newcommand{\Var}{\mathop{\rm Var}\nolimits} %variance
+\newcommand{\var}{\mathop{\rm var}\nolimits} %variance
+
+\pagestyle{plain}
+\setcounter{secnumdepth}{0}
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Solution}
+\newtheorem{summary}[theorem]{Summary}
+
+\title{Censored quantile regression for residual lifetime with induced smoothing method}
+\author{Kyu Hyun Kim}
+\date{\today}
+
+\begin{document}
+	\maketitle
+\section{1. Introduction}
+	N/A
+\section{2. Censored quantile regression for residual quantile with induced smoothing}
+\subsection{2.1 AFT model with no censored data}
+	We start from scenario where random sample subject to no censoring: $\{T_i, X_i\}_{i=1}^{n}$, where $T_i, X_i$ denote the failure time, and covariate values of $i^{th}$ subject respectively.\\
+		
+	\noindent $\theta_{\tau}(t_0)$ is $\tau$-th quantile of residual lifetime at followup time $t_0$, and we simply express it as $\theta_{\tau}$. Corresponding to the AFT model and regression quantiles of residual lifetime, the $\tau$-th quantile of residual lifetime given the covariate $X_i$ is given by
+	\begin{equation} \label{eq:1}
+	\theta_{\tau}=log(T_i-t_0)=X_{i}^{\prime}\beta(\tau, t_0)+\epsilon_i
+	\end{equation}
+	where $\beta(\tau, t_0)$ represents $\tau$-th quantile regression coefficient given covariate $X_i$ and followup time $t_0$, and we simply use $\beta$ instead of $\beta(\tau, t_0)$. $\epsilon_i$ is independent and have zero $\tau$-th quantile.\\
+	
+	\noindent In this case, the $\tau$-th quantile residual lifetime quantile is solution of estimating equation:
+	\begin{equation} \label{eq:2}
+	0 = n^{-1}\sum_{i=1}^{n}I[(T_i-t_0)\leq\theta_{\tau}]-(1-\tau)I[T_i \leq t_0]-\tau
+	\end{equation}
+
+	\noindent After some manipulations, estimating equation for $\tau$-th quantile regression coefficient $\beta$ is
+	\begin{equation} \label{eq:3}
+	0 = n^{-1}\sum_{i=0}^{n}I[T_i \ge t_0] X_i I \Big(I\{\log(T_i - t_0) \leq X_i^{\prime}\beta\} - \tau \Big)
+	\end{equation}
+
+\subsection{2.2 AFT model with censored data}
+	\noindent And we consider concept of censoring of subject. Suppose n iid $\{T_i, X_i\}_{i=1}^{n}$ are generated from model (\ref{eq:1}), and we have right censored data $\{Z_i, \delta_i, X_i \}_{i=1}^{n}$ where $Z_i=min(T_i,C_i), \delta_i = I[T_i \leq C_i]$ are independent. In this case, we need to consider weight $w_i$, which are the probability that Kaplan-Meier estimator based on $\{Z_i, \delta_i \}_{i=1}^{n}$ assigns on the case $(Z_i, \delta_i)$. For this weight, we use inverse probability of censoring weighting (IPCW) technique (Robins and Ronitzky, 1992).\\
+	
+	\noindent Therefore, estimating equation of censored regression residual quantile estimator is:
+	\begin{equation} \label{eq:4}
+	U_n(\beta) = 0 = n^{-1}\sum_{i=1}^{n}I[Z_i \ge t_0] X_i \Big(I\{\log(Z_i - t_0) \leq X_i^{\prime}\beta\} \frac{\delta_i}{\hat{G}(Z_i)}  -\tau \Big)
+	\end{equation}
+	where $\hat{G}(Z_i)$ is the Kaplan-Meier estimate of the survival unction of the censoring variable $C_i$. We prove consistancy and asymptotic properties of unsmoothed estimator in appendix.\\
+	\\
+	There is similar estimating equation of censored regression residual quantile estimator that suggested at Pang et al.(2010) and Kim et al.(2012). Both estimating equations used IPCW as weight to apply censored data, however, only difference is the position of weight. Both equations are theoretically correct equations, and Peng and Fine (2012) also similar estimating equation.\\
+
+\subsection{2.3 Induced smoothing approach}
+	\noindent Even though solving equation (\ref{eq:4}) is possible by using linear programming approach, it has much intensive computation issue. To minimize computation burden, we apply induced smoothing method, proposed by Brown and Wang (2005). By the asymptotic normality of $\hat{\beta}$, we can express $\hat{\beta} = \beta+\textbf{H}^{1/2}V$, where $H = n^{-1}\Gamma,\ V \sim N(0, I_p)$, and $I_p$ is the $p \times p $ identity matrix. After applying induced smoothing approach to equation (\ref{eq:4})
+	
+	\begin{equation} \label{eq:5}
+	\tilde{U}_n(\beta, \textbf{H}) = E_v \{U_n(\beta+\textbf{H}^{1/2}V)\} = n^{-1} \sum_{i=1}^{n} I[Z_i \geq t_0] X_i \Big\{\tau - \frac{\delta_i}{\hat{G}(Z_i)}\Phi\Big(\frac{X_i^\prime\beta-log(Z_i-t_0)}{\sqrt{X_i^{\prime} \textbf{H} X_{i}}}\Big)\Big\}
+	\end{equation} 
+	where $\Phi(\cdot)$ is the standard normal cumulative distribution function. As Pang et al.(2010) proposed, we use a positive definite $p \times p$ matrix $\tilde{\textbf{H}} = O(n^{-1})$ as a smoothing matrix $\textbf{H}$.\\ Estimated $\beta$ from equation \ref{eq:5} is also consistent and asymptotically normal by \ref{thm:1} under below regularity conditions C1-C3:
+	\begin{enumerate}
+		\item[C1] The conditional error distribution functions, $F_{i}(\cdot\mid X_{i})^{n}_{i=1}$, are absolutely continuous with continuous densities $f_{i}(\cdot\mid X_{i})$ uniformly bounded away from $0$ and $\infty$ in a neighborhood of $0$, and $f_{i}^{\prime}(\cdot\mid X_{i})$ exists and is uniformly bounded on the real line.
+		\item[C2] For each $i=1,\dots, n, X_{i}$ satisfies the following conditions:
+		\begin{flushleft}
+			(a) $n^{-1}\Sigma_{i=1}^{n} X_{i} X_{i}^{\prime}f_{i}(0\mid X_{i})$ converges to a positive definite matrix \textbf{A};\\
+			(b) sup$_{i}\lVert X_{i} \rVert < \infty\ $, where $\lVert \cdot \rVert$ denotes the Euclidean norm.\\
+		\end{flushleft}
+		\item[C3] There exists $L>0$ such that $P(C>L)=0$ and $P(C=L)\geq\nu$, where $\nu$ is some positive constant.
+	\end{enumerate} 
+
+	\begin{theorem} \label{thm:1}
+	Assume condition $1-3$ hold, and the smoothing matrix $H$ is positive definite and $O(n^{-1})$, as $n\to\infty$ then we have
+		\begin{center}
+			$n^{1/2}(\hat{\beta}_{IS}-\beta_0) \xrightarrow{d} \mathcal{N}(0,\Gamma)$
+		\end{center}
+	\end{theorem}
+	
+	\noindent We prove above theorem \ref{thm:1} in appendix.\\
+	
+	\noindent To estimate the asymptotic variance of $\hat{\beta}_{IS}$, we use sandwich estimators, which is computationally more efficient than full-multiplier bootstrap approach based on Chiou et al.(2015). 
+	
+	\noindent For sandwich estimator, $\Sigma(\beta_0)$, two estimators, $A(\beta_0)$ and $V(\beta_0)$, are necessary. For estimating $A(\beta_0)$, 
+	we evaluate $A_n(\beta_0)$, the derivative of the smoothed estimating function:
+	
+	\begin{equation}
+	A_n(\beta_0) = \frac{\partial \tilde{U}_n(\hat{\beta}_{IS}, \tilde{\textbf{H}})}{\partial \beta} = n^{-1}\sum_{i=1}^{n} I[Z_i>t_0] X_i \frac{\delta_i}{\hat{G}(Z_i)} \phi\bigg(\frac{{X_i}^{\prime}\hat{\beta}_{IS}-\log(Z_i-t_0)}{\sqrt{{X_i}^{\prime}\tilde{\textbf{H}} X_i}}\bigg)\bigg(\frac{-{X_i}}{\sqrt{{X_i}^{\prime} \tilde{\textbf{H}} {X_i}}}\bigg)
+	\end{equation}
+	
+	\noindent at $\hat{\beta}_{IS}$, which is the solution of estimating equation (\ref{eq:5}), where $\phi \{ \cdot \}$ is the density function of a standard normal distribution.\\
+	
+	\noindent For estimating $V(\beta_0)$, we generate iid positive multiplier $\eta_i, i=1,...,n,$ that are independent of the observed data from $\exp(1)$, and make perturbed estimating equation, $\tilde{U}^{\star}_n(\beta, \textbf{H})$, with generated $\eta_i$:
+	
+	\begin{equation} \label{eq:6}
+	\tilde{U}^{\star}_n(\beta, \tilde{\textbf{H}}) = n^{-1} \sum_{i=1}^{n} I[Z_i \geq t_0] X_i \eta_i \Big\{\tau - \frac{\delta_i}{\hat{G}(Z_i)}\Phi\Big(\frac{X_i^\prime\beta-log(Z_i-t_0)}{\sqrt{X_i^{\prime} \tilde{\textbf{H}} X_{i}}}\Big)\Big\}
+	\end{equation}
+	
+	\noindent We evaluate $\tilde{U}^{\star}_n(\beta, \tilde{\textbf{H}})$ at $\hat{\beta}_{IS}$. Repeating same process $m$ times with new multipliers, and find sample variance of $\{\tilde{U}^{\star (1)}_n(\beta, \tilde{\textbf{H}}),..., \tilde{U}^{\star (m)}_n(\beta, \tilde{\textbf{H}})\}$. $V(\beta_0)$ is approxiamated to sample variance of $\tilde{U}^{\star}_n(\beta, \tilde{\textbf{H}})$.
+	
+	\noindent Using above $A(\beta_0)$, and $V(\beta_0)$, $\Sigma(\beta_0)$ is:
+	\begin{equation}
+	\Sigma(\beta_0) = A(\beta_0)^T V(\beta_0) A(\beta_0)
+	\end{equation}
+	
+\newpage
+\section{3. Simulation}
+	To verify performance of smoothed estimator, we used same simple regression simulation setting that provided by Jung et al. (2009). Covariate $X_i$ is a binary covariate, 0 for control and 1 for treatment group. $Z_i = min(T_i, C_i)$ where $T_i$ generated from Weibull regression model with one binary covariate $X_i$ and intercept and where $C_i$ generated from uniform distribution with range 0 and c, which is adjusted for censoring proportion. One dataset size was 200, and 2000 simulations were performed for every combination of $t_0$ and censoring proportion. In variance estimating process, we need to fix how many $\tilde{U}^{\star }_n(\beta, \tilde{\textbf{H}})$ we will use to find sample variance. Comparing sample variance of 100 $V(\beta_0)$s and sample variance of 500 $V(\beta_0)$s, we conclude that 100 $\tilde{U}^{\star }_n(\beta, \tilde{\textbf{H}})$s are close enough to $V(\beta_0)$.\\
+	
+	From table 1 to table 12, we verify the performance of suggested estimator when covariate does not affect residual lifetime, which means $\beta_{t_0}^{(1)} = 0$. Based on Jung et al.(2009) simulation setting, true parameter $\beta_{t_0}^{(0)} = 1.61, 1.41, 1.22, 1.04$ at $t_0 = 0, 1, 2, 3$. $\beta^(0)$ and $\beta^(1)$ are mean of empirical estimates of true paramters $\beta^(0), \beta^(1)$, and SE is mean of standard error of empirical estimates of each true parameter. SD is standard deviation of empirical estimates, and Coverage is proportion that true parameter are included in $95\%$ confidence interval of proposed estimates. 
+	
+	\begin{table}[H]
+		\caption{Estimates of $25\%$ quantile residual lifetime when $\beta^{(1)}=0$}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\multirow{2}{*}{$t_0$} & \multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta^{(0)}$} & \multicolumn{4}{c|}{$\beta^{(1)}$}\\ \cline{3-10}
+			& & $\beta^{(0)}$ & SE & SD  & Coverage  & $\beta^{(1)}$ & SE & SD & Coverage\\
+			\hline\hline
+			\multirow{4}{*}{$t_0=0$} & 0\% & 1.607 & 0.069 & 0.069 & 0.931 & 0.000 & 0.098 & 0.069 & 0.946 \\
+			& 10\% & 1.608 & 0.073 & 0.069 & 0.937 & 0.000 & 0.104 & 0.069 & 0.944 \\
+			& 30\% & 1.608 & 0.083 & 0.081 & 0.926 & 0.001 & 0.119 & 0.081 & 0.941 \\
+			& 50\% & 1.606 & 0.096 & 0.091 & 0.924 & 0.003 & 0.137 & 0.091 & 0.933 \\
+			\hline
+			\multirow{4}{*}{$t_0=1$} & 0\% & 1.406 & 0.084 & 0.084 & 0.927 & -0.001 & 0.120 & 0.084 & 0.940 \\
+			& 10\% & 1.408 & 0.089 & 0.090 & 0.916 & -0.003 & 0.127 & 0.090 & 0.934 \\
+			& 30\% & 1.403& 0.103 & 0.098 & 0.928 & 0.002 & 0.147 & 0.098 & 0.932 \\
+			& 50\% & 1.408 & 0.120 & 0.115 & 0.908 & -0.001 & 0.174 & 0.115 & 0.938 \\
+			\hline
+			\multirow{4}{*}{$t_0=2$} & 0\% & 1.214 & 0.100 & 0.099 & 0.924 & 0.002 & 0.143 & 0.099 & 0.943 \\
+			& 10\% & 1.214 & 0.108 & 0.106 & 0.918 & 0.000 & 0.154 & 0.106 & 0.942 \\
+			& 30\% & 1.215 & 0.126 & 0.121 & 0.923 & -0.002 & 0.181 & 0.121 & 0.938 \\
+			& 50\% & 1.220 & 0.151 & 0.144 & 0.912 & 0.000 & 0.222 & 0.144 & 0.925 \\
+			\hline
+			\multirow{4}{*}{$t_0=3$} & 0\% & 1.038 & 0.120 & 0.121 & 0.913 & -0.004 & 0.171 & 0.121 & 0.923 \\
+			& 10\% & 1.038 & 0.129 & 0.133 & 0.904 & -0.004 & 0.186 & 0.133 & 0.934 \\
+			& 30\% & 1.037 & 0.157 & 0.153 & 0.914 & 0.005 & 0.225 & 0.153 & 0.935 \\
+			& 50\% & 1.040 & 0.186 & 0.177 & 0.906 & 0.005 & 0.284 & 0.177 & 0.937 \\
+			\hline
+		\end{tabular}
+	\end{table}
+
+	\begin{table}[H]
+		\caption{Estimates of $50\%$ quantile residual lifetime when $\beta^{(1)}=0$}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\multirow{2}{*}{$t_0$} & \multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta^{(0)}$} & \multicolumn{4}{c|}{$\beta^{(1)}$}\\ \cline{3-10}
+			& & $\beta^{(0)}$ & SE & SD  & Coverage  & $\beta^{(1)}$ & SE & SD & Coverage\\
+			\hline\hline
+			\multirow{4}{*}{$t_0=0$} & 0\% & 1.607 & 0.069 & 0.069 & 0.931 & 0.000 & 0.098 & 0.069 & 0.946 \\
+			& 10\% & 1.607 & 0.073 & 0.069 & 0.937 & -0.001 & 0.104 & 0.069 & 0.944 \\
+			& 30\% & 1.608 & 0.083 & 0.081 & 0.926 & -0.002 & 0.119 & 0.081 & 0.941 \\
+			& 50\% & 1.606 & 0.096 & 0.091 & 0.924 & 0.003 & 0.137 & 0.091 & 0.933 \\
+			\hline
+			\multirow{4}{*}{$t_0=1$} & 0\% & 1.406 & 0.084 & 0.084 & 0.927 & -0.001 & 0.120 & 0.084 & 0.940 \\
+			& 10\% & 1.408 & 0.090 & 0.090 & 0.916 & -0.003 & 0.127 & 0.090 & 0.934 \\
+			& 30\% & 1.403 & 0.103 & 0.098 & 0.928 & 0.002 & 0.147 & 0.098 & 0.932 \\
+			& 50\% & 1.408 & 0.120 & 0.115 & 0.908 & -0.001 & 0.174 & 0.115 & 0.938 \\
+			\hline
+			\multirow{4}{*}{$t_0=2$} & 0\% & 1.214 & 0.100 & 0.099 & 0.924 & 0.002 & 0.143 & 0.099 & 0.943 \\
+			& 10\% & 1.214 & 0.108 & 0.106 & 0.918 & 0.000 & 0.154 & 0.106 & 0.942 \\
+			& 30\% & 1.215 & 0.126 & 0.121 & 0.922 & -0.002 & 0.181 & 0.121 & 0.938 \\
+			& 50\% & 1.220 & 0.151 & 0.144 & 0.911 & 0.000 & 0.222 & 0.144 & 0.925 \\
+			\hline
+			\multirow{4}{*}{$t_0=3$} & 0\% & 1.038 & 0.120 & 0.121 & 0.913 & -0.004 & 0.171 & 0.121 & 0.923 \\
+			& 10\% & 1.038 & 0.129 & 0.133 & 0.904 & -0.003 & 0.186 & 0.133 & 0.934 \\
+			& 30\% & 1.036 & 0.157 & 0.153 & 0.914 & 0.005 & 0.225 & 0.153 & 0.935 \\
+			& 50\% & 1.040 & 0.186 & 0.177 & 0.906 & 0.005 & 0.284 & 0.177 & 0.937 \\
+			\hline
+		\end{tabular}
+	\end{table}
+			
+	\begin{table}[H]
+		\caption{Estimates of $75\%$ quantile residual lifetime when $\beta^{(1)}=0$}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\multirow{2}{*}{$t_0$} & \multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta^{(0)}$} & \multicolumn{4}{c|}{$\beta^{(1)}$}\\ \cline{3-10}
+			& & $\beta^{(0)}$ & SE & SD  & Coverage  & $\beta^{(1)}$ & SE & SD & Coverage\\
+			\hline\hline
+			\multirow{4}{*}{$t_0=0$} & 0\% & 1.609 & 0.058 & 0.058 & 0.926 & 0.003 & 0.082 & 0.058 & 0.938 \\
+			& 10\% & 1.610 & 0.069 & 0.066 & 0.951 & 0.001 & 0.098 & 0.066 & 0.941 \\
+			& 30\% & 1.610 & 0.092 & 0.080 & 0.955 & 0.008 & 0.133 & 0.080 & 0.948 \\
+			& 50\% & 1.615 & 0.133 & 0.101 & 0.948 & 0.002 & 0.200 & 0.101 & 0.961 \\
+			\hline
+			\multirow{4}{*}{$t_0=1$} & 0\% & 1.410 & 0.072 & 0.075 & 0.917 & -0.001 & 0.103 & 0.075 & 0.931 \\
+			& 10\% & 1.410 & 0.086 & 0.081 & 0.936 & 0.002 & 0.122 & 0.081 & 0.942 \\
+			& 30\% & 1.410 & 0.117 & 0.104 & 0.940 & 0.010 & 0.171 & 0.104 & 0.948 \\
+			& 50\% & 1.396 & 0.207 & 0.120 & 0.944 & 0.014 & 0.327 & 0.120 & 0.969 \\
+			\hline
+			\multirow{4}{*}{$t_0=2$} & 0\% & 1.215 & 0.090 & 0.092 & 0.906 & 0.005 & 0.129 & 0.092 & 0.930 \\
+			& 10\% & 1.219 & 0.109 & 0.103 & 0.935 & 0.000 & 0.156 & 0.103 & 0.934 \\
+			& 30\% & 1.222 & 0.154 & 0.140 & 0.926 & 0.006 & 0.228 & 0.140 & 0.929 \\
+			& 50\% & 1.175 & 0.264 & 0.136 & 0.941 & 0.018 & 0.530 & 0.136 & 0.987 \\
+			\hline
+			\multirow{4}{*}{$t_0=3$} & 0\% & 1.036 & 0.116 & 0.121 & 0.905 & 0.000 & 0.166 & 0.121 & 0.929 \\
+			& 10\% & 1.037 & 0.140 & 0.138 & 0.907 & 0.006 & 0.205 & 0.138 & 0.925 \\
+			& 30\% & 1.040 & 0.215 & 0.191 & 0.904 & 0.016 & 0.330 & 0.191 & 0.945 \\
+			& 50\% & 0.946 & 0.651 & 0.177 & 0.937 & 0.036 & 0.905 & 0.177 & 0.991 \\	
+			\hline
+		\end{tabular}
+	\end{table}
+
+	In every combination of $t_0$, censoring proportion, and estimated quantile, proposed estimator is quite close to true paramter except for estimating high qunatile $75\%$ from data with high censoring proportion, $70\%$. Furthermore, small data size due to large $t_0$ makes estimating true parameter more difficult.\\
+	
+	From table 13 to table 24, we verify that smoothed estimator is able to estimate an effect of covariate. In this simulation scenario, we add one more assumption that the difference in residual time between two groups are 5. Then, true parameter $\beta_{t_0}^{(0)} = 1.61, 1.41, 1.22, 1.04$ at $t_0 = 0, 1, 2, 3$ and $\beta_{t_0}^{(1)} = 0.69, 0.80, 0.91, 1.02$ at $t_0 = 0, 1, 2, 3$.
+
+	\begin{table}[H]
+		\caption{Estimates of $25\%$ quantile residual lifetime when $\beta^{(1)} \neq 0$}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\multirow{2}{*}{$t_0$} & \multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta^{(0)}$} & \multicolumn{4}{c|}{$\beta^{(1)}$}\\ \cline{3-10}
+			& & $\beta^{(0)}$ & SE & SD  & Coverage  & $\beta^{(1)}$ & SE & SD & Coverage\\
+			\hline\hline
+			\multirow{4}{*}{$t_0=0$} & 0\% & 1.604 & 0.096 & 0.098 & 0.910 & 0.692 & 0.137 & 0.098 & 0.929 \\
+			& 10\% & 1.604 & 0.098 & 0.099 & 0.908 & 0.693 & 0.141 & 0.099 & 0.934 \\
+			& 30\% & 1.605 & 0.102 & 0.102 & 0.904 & 0.693 & 0.150 & 0.102 & 0.933 \\
+			& 50\% & 1.606 & 0.106 & 0.107 & 0.905 & 0.692 & 0.162 & 0.107 & 0.937 \\
+			\hline
+			\multirow{4}{*}{$t_0=1$} & 0\% & 1.403 & 0.116 & 0.116 & 0.909 & 0.789 & 0.159 & 0.116 & 0.933 \\
+			& 10\% & 1.410 & 0.119 & 0.119 & 0.907 & 0.787 & 0.164 & 0.119 & 0.937 \\
+			& 30\% & 1.399 & 0.124 & 0.124 & 0.898 & 0.797 & 0.176 & 0.124 & 0.925 \\
+			& 50\% & 1.407 & 0.129 & 0.128 & 0.905 & 0.793 & 0.188 & 0.128 & 0.930 \\
+			\hline
+			\multirow{4}{*}{$t_0=2$} & 0\% & 1.210 & 0.137 & 0.140 & 0.894 & 0.884 & 0.182 & 0.140 & 0.923 \\
+			& 10\% & 1.209 & 0.142 & 0.140 & 0.908 & 0.886 & 0.191 & 0.140 & 0.927 \\
+			& 30\% & 1.216 & 0.144 & 0.146 & 0.900 & 0.878 & 0.201 & 0.146 & 0.927 \\
+			& 50\% & 1.209 & 0.152 & 0.152 & 0.899 & 0.893 & 0.218 & 0.152 & 0.925 \\
+			\hline
+			\multirow{4}{*}{$t_0=3$} & 0\% & 1.031 & 0.154 & 0.154 & 0.895 & 0.965 & 0.204 & 0.154 & 0.917 \\
+			& 10\% & 1.032 & 0.158 & 0.162 & 0.886 & 0.972 & 0.211 & 0.162 & 0.923 \\
+			& 30\% & 1.040 & 0.166 & 0.168 & 0.889 & 0.957 & 0.226 & 0.168 & 0.909 \\
+			& 50\% & 1.037 & 0.182 & 0.174 & 0.891 & 0.963 & 0.254 & 0.174 & 0.909 \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	\begin{table}[H]
+		\caption{Estimates of $50\%$ quantile residual lifetime when $\beta^{(1)} \neq 0$}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\multirow{2}{*}{$t_0$} & \multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta^{(0)}$} & \multicolumn{4}{c|}{$\beta^{(1)}$}\\ \cline{3-10}
+			& & $\beta^{(0)}$ & SE & SD  & Coverage  & $\beta^{(1)}$ & SE & SD & Coverage\\
+			\hline\hline
+			\multirow{4}{*}{$t_0=0$} & 0\% & 1.607 & 0.068 & 0.068 & 0.921 & 0.692 & 0.097 & 0.068 & 0.949 \\
+			& 10\% & 1.607 & 0.072 & 0.070 & 0.931 & 0.691 & 0.104 & 0.070 & 0.944 \\
+			& 30\% & 1.606 & 0.078 & 0.075 & 0.932 & 0.695 & 0.119 & 0.075 & 0.943 \\
+			& 50\% & 1.606 & 0.086 & 0.081 & 0.933 & 0.695 & 0.149 & 0.081 & 0.945 \\
+			\hline
+			\multirow{4}{*}{$t_0=1$} & 0\% & 1.408 & 0.084 & 0.086 & 0.912 & 0.790 & 0.114 & 0.086 & 0.932 \\
+			& 10\% & 1.406 & 0.087 & 0.088 & 0.930 & 0.790 & 0.121 & 0.088 & 0.944 \\
+			& 30\% & 1.408 & 0.095 & 0.095 & 0.922 & 0.791 & 0.139 & 0.095 & 0.938 \\
+			& 50\% & 1.409 & 0.105 & 0.103 & 0.925 & 0.789 & 0.190 & 0.103 & 0.943 \\
+			\hline
+			\multirow{4}{*}{$t_0=2$} & 0\% & 1.216 & 0.100 & 0.100 & 0.918 & 0.884 & 0.132 & 0.100 & 0.937 \\
+			& 10\% & 1.217 & 0.106 & 0.103 & 0.922 & 0.880 & 0.142 & 0.103 & 0.946 \\
+			& 30\% & 1.215 & 0.116 & 0.114 & 0.916 & 0.879 & 0.164 & 0.114 & 0.931 \\
+			& 50\% & 1.216 & 0.131 & 0.123 & 0.915 & 0.872 & 0.239 & 0.123 & 0.941 \\
+			\hline
+			\multirow{4}{*}{$t_0=3$} & 0\% & 1.030 & 0.121 & 0.122 & 0.915 & 0.972 & 0.154 & 0.122 & 0.913 \\
+			& 10\% & 1.037 & 0.125 & 0.127 & 0.896 & 0.965 & 0.163 & 0.127 & 0.902 \\
+			& 30\% & 1.037 & 0.137 & 0.137 & 0.902 & 0.964 & 0.187 & 0.137 & 0.927 \\
+			& 50\% & 1.037 & 0.158 & 0.154 & 0.904 & 0.943 & 0.312 & 0.154 & 0.925 \\
+			\hline
+		\end{tabular}
+	\end{table}
+
+	\begin{table}[H]
+		\caption{Estimates of $75\%$ quantile residual lifetime when $\beta^{(1)} \neq 0$}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\multirow{2}{*}{$t_0$} & \multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta^{(0)}$} & \multicolumn{4}{c|}{$\beta^{(1)}$}\\ \cline{3-10}
+			& & $\beta^{(0)}$ & SE & SD  & Coverage  & $\beta^{(1)}$ & SE & SD & Coverage\\
+			\hline\hline
+			\multirow{4}{*}{$t_0=0$} & 0\% & 1.610 & 0.058 & 0.0593 & 0.922 & 0.695 & 0.082 & 0.059 & 0.944 \\
+			& 10\% & 1.610 & 0.066 & 0.063 & 0.938 & 0.695 & 0.098 & 0.063 & 0.940 \\
+			& 30\% & 1.611 & 0.080 & 0.074 & 0.939 & 0.698 & 0.134 & 0.074 & 0.955 \\
+			& 50\% & 1.627 & 0.105 & 0.093 & 0.961 & 0.614 & 0.430 & 0.093 & 0.955 \\
+			\hline
+			\multirow{4}{*}{$t_0=1$} & 0\% & 1.408 & 0.072 & 0.073 & 0.929 & 0.795 & 0.098 & 0.073 & 0.935 \\
+			& 10\% & 1.407 & 0.081 & 0.079 & 0.933 & 0.796 & 0.115 & 0.079 & 0.947 \\
+			& 30\% & 1.410 & 0.097 & 0.092 & 0.935 & 0.799 & 0.159 & 0.092 & 0.951 \\
+			& 50\% & 1.435 & 0.132 & 0.118 & 0.935 & 0.654 & 0.618 & 0.118 & 0.923 \\
+			\hline
+			\multirow{4}{*}{$t_0=2$} & 0\% & 1.215 & 0.091 & 0.092 & 0.9212 & 0.889 & 0.117 & 0.092 & 0.927 \\
+			& 10\% & 1.218 & 0.101 & 0.101 & 0.912 & 0.888 & 0.138 & 0.101 & 0.934 \\
+			& 30\% & 1.221 & 0.125 & 0.119 & 0.917 & 0.887 & 0.200 & 0.119 & 0.946 \\
+			& 50\% & 1.251 & 0.175 & 0.150 & 0.931 & 0.689 & 0.858 & 0.150 & 0.881 \\
+			\hline
+			\multirow{4}{*}{$t_0=3$} & 0\% & 1.033 & 0.117 & 0.115 & 0.919 & 0.974 & 0.144 & 0.115 & 0.916 \\
+			& 10\% & 1.037 & 0.130 & 0.126 & 0.907 & 0.968 & 0.169 & 0.126 & 0.922 \\
+			& 30\% & 1.046 & 0.158 & 0.150 & 0.919 & 0.970 & 0.241 & 0.150 & 0.943 \\
+			& 50\% & 1.079 & 0.240 & 0.209 & 0.906 & 0.741 & 0.604 & 0.209 & 0.893 \\	
+			\hline
+		\end{tabular}
+	\end{table}
+
+	In data with high censoring proportion, estimating $\beta$ is unstable. When we find a solution for proposed estimating equation (\ref{eq:5}), we use nleqslv function in nleqslv R package. However, solutions from high censored proportion data are not unique or unsolvable. Other nonlinear equation solvers also have similar issues. The higher estimating quantiles is, the harder we find solution. Futthermore, more error comes out when we use smaller dataset.
+	
+	\begin{table}[H]
+		\caption{Estimates $25\%$ quantile residual lifetime with high censoring ($70\%$) when $\beta^{(1)} = 0$}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\multirow{2}{*}{$t_0$} & \multirow{2}{*}{Quantile} & \multicolumn{4}{c|}{$\beta^{(0)}$} & \multicolumn{4}{c|}{$\beta^{(1)}$}\\ \cline{3-10}
+			& & $\beta^{(0)}$ & SE & SD  & Coverage  & $\beta^{(1)}$ & SE & SD & Coverage\\
+			\hline\hline
+			\multirow{3}{*}{$t_0=0$} & 25\% & 1.600 & 0.596 & 0.102 & 0.940 & -0.002 & 0.662 & 0.102 & 0.956 \\
+			& 50\% & 1.600 & 0.596 & 0.102 & 0.939 & -0.002 & 0.662 & 0.102 & 0.956 \\ 
+			& 75\% & 1.481 & 0.231 & 0.075 & 0.818 & 0.016 & 0.538 & 0.075 & 1.000 \\ 
+			\hline
+			\multirow{3}{*}{$t_0=1$} & 25\% & 1.378 & 0.179 & 0.115 & 0.938 & 0.003 & 0.339 & 0.115 & 0.968 \\
+			& 50\% & 1.378 & 0.179 & 0.115 & 0.938 & 0.003 & 0.339 & 0.115 & 0.968 \\
+			& 75\% & 1.218 & 0.269 & NA & 1.000 & -0.104 & 0.290 & NA & 1.000 \\ 
+			\hline
+			\multirow{3}{*}{$t_0=2$} & 25\% & 1.145 & 0.258 & 0.141 & 0.922 & 0.038 & 0.425 & 0.141 & 0.981 \\ 
+			& 50\% & 1.145 & 0.258 & 0.141 & 0.921 & 0.038 & 0.425 & 0.141 & 0.981 \\ 
+			& 75\% & NA & NA & NA & NA & NA & NA & NA & NA \\ 
+			\hline
+			\multirow{3}{*}{$t_0=3$} & 25\% & 0.900 & 1.216 & 0.166 & 0.908 & 0.088 & 1.520 & 0.166 & 0.986 \\ 
+			& 50\% & 0.900 & 1.216 & 0.166 & 0.908 & 0.088 & 1.520 & 0.166 & 0.986 \\ 
+			& 75\% & NA & NA & NA & NA & NA & NA & NA & NA \\ 
+			\hline
+		\end{tabular}
+	\end{table}
+
+	\begin{table}[H]
+		\caption{Estimates of $25\%$ quantile residual lifetime with high censoring ($70\%$) when $\beta^{(1)} \neq 0$}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\multirow{2}{*}{$t_0$} & \multirow{2}{*}{Quantile} & \multicolumn{4}{c|}{$\beta^{(0)}$} & \multicolumn{4}{c|}{$\beta^{(1)}$}\\ \cline{3-10}
+			& & $\beta^{(0)}$ & SE & SD  & Coverage  & $\beta^{(1)}$ & SE & SD & Coverage\\
+			\hline\hline
+			\multirow{3}{*}{$t_0=0$} & 25\% & 1.605 & 0.113 & 0.112 & 0.909 & 0.683 & 0.212 & 0.112 & 0.944 \\ 
+			& 50\% & 1.615 & 0.104 & 0.099 & 0.915 & 0.517 & 0.361 & 0.099 & 0.827 \\  
+			& 75\% & 1.602 & 0.156 & 0.081 & 1.000 & 0.294 & 0.603 & 0.081 & 0.653 \\
+			\hline
+			\multirow{3}{*}{$t_0=1$} & 25\% & 1.406 & 0.140 & 0.140 & 0.896 & 0.767 & 0.273 & 0.140 & 0.943 \\
+			& 50\% & 1.418 & 0.140 & 0.130 & 0.909 & 0.550 & 0.499 & 0.130 & 0.788 \\
+			& 75\% & 1.376 & 0.170 & 0.114 & 1.000 & 0.283 & 1.124 & 0.114 & 0.571 \\ 
+			\hline
+			\multirow{3}{*}{$t_0=2$} & 25\% & 1.215 & 0.165 & 0.168 & 0.893 & 0.837 & 0.281 & 0.168 & 0.918 \\
+			& 50\% & 1.246 & 0.160 & 0.157 & 0.886 & 0.553 & 0.730 & 0.157 & 0.783 \\ 
+			& 75\% & 1.128 & 0.228 & 0.112 & 1.000 & 0.301 & 0.617 & 0.112 & 0.467 \\ 
+			\hline
+			\multirow{3}{*}{$t_0=3$} & 25\% & 1.035 & 0.192 & 0.199 & 0.862 & 0.908 & 0.346 & 0.199 & 0.909 \\
+			& 50\% & 1.048 & 0.234 & 0.198 & 0.85 & 0.596 & 0.667 & 0.198 & 0.743 \\
+			& 75\% & 0.917 & 1.482 & 0.196 & 0.808 & 0.380 & 2.369 & 0.196 & 0.731 \\ 
+			\hline
+		\end{tabular}
+	\end{table}
+
+\section{4. Real data analysis}
+	
+\section{5. Discussion}
+	
+\section{6. Appendix}
+\subsection{6.1 Asymptotic properties of the unsmoothed estimator}
+	\noindent In this part, we establish the consistency and asymptotic normality of $\beta$. We first impose the regularity conditions.
+	
+	\begin{enumerate}
+		\item[A1] There exists $\nu \ge 0$ such that $P(C = \nu) \ge 0$ and $P(C \ge \nu) =0$.
+		\item[A2] $X$ is uniformly bounded, that is $\sup_i \left\lVert X_i \right\rVert \le \infty$. 
+		\item[A3] 
+		\begin{flushleft}
+			(i) $\beta_0(\tau)$ is Lipschitz continuous for $\tau \in [\tau_L, \tau_U]$;\\
+			(ii) $f_i(t|X)$ is bounded above uniformly in $t$ and $X$,where $f_1(t|X) = dF_1(t|X)/dt$.
+		\end{flushleft}
+		\item[A4] For some $\rho_0 \ge 0$ and $c_0 \ge 0, inf_{b \in \beta(\rho_0)} eigmin A(b) \geq c_0$,\\ where $\beta(\rho)={b\in R^{P+1} : \inf_{\tau \in [\tau_L, \tau_U]}
+			\left\lVert b-\beta_0(\tau) \right\rVert \leq \rho}$ and $A(b) = E[Z^{\otimes2}f_1 \{\exp(X^T b)|X\}]$. Here $\left\lVert \cdot \right\rVert$ is the Euclidean norm, and we define $u^{\otimes2} = uu^T$ for a vector $u$.
+	\end{enumerate}
+	
+	\noindent Peng and Fine (2012) shows an estimator from similar estimating equation
+	\begin{equation} \label{eq:6}
+	S_n(\beta, \tau)=n^{-1}\sum_{i=1}^{n}X_i \Big( I\{log(Z_i-t_0) \leq X_i^{\prime} \beta\} \frac{\delta_i}{\hat{G}(Z_i)}  -\tau \Big)
+	\end{equation}
+	\noindent is consistent and satisfies asymptotic normality under above regularity conditions. If we change first $X_i$ to $X_i^\star$ where $X_i^\star = X_i I[Z_i>t_0]$, we are simply able to prove our suggested estimator $\beta_\tau$ is also consistent and asymptotically normal:
+	\begin{math}
+	n^{1/2}(\hat{\beta}-\beta_0) \xrightarrow{d} N(0, \Gamma)
+	\end{math}
+	\noindent where $\Gamma = A^{-1} \Sigma A^{-1}, A = \lim_{n \rightarrow \infty} X_i X_i^{\prime}f_i(0|X_i)$, and $\Sigma = \lim_{n \rightarrow \infty} Var\{U_n(\beta_0)\}$
+	
+	\subsection{6.2 Asymptotic properties of the smoothed estimator}
+	\noindent For prove theorem \ref{thm:1}, we need following lemma \ref{lemma:1}.\\
+	
+	\begin{lemma} \label{lemma:1}
+		Let $ W=O(n^{-1})$ any positive definite matrix, and define
+		\begin{center}
+			$\tilde{S}_n(\beta, \textbf{W})=\frac{1}{n} \sum_{i=1}^{n} I[Z_i \geq t_0] X_i \frac{\delta_i}{\hat{G}(Z_i)}\Phi\Big(\frac{X_i^\prime\beta-log(Z_i-t_0)}{\sqrt{X_i^{\prime} \textbf{W}X_{i}}}\Big)$
+		\end{center}
+		as the smoothed estimating function. Under condition 1-3, we have
+		\begin{center}
+			$\sup\limits_{\lVert \beta - \beta_0 \rVert \leq \epsilon_n} \lVert {n^{1/2}} \{ \tilde{S}_n(\beta, \textbf{W})-S_n(\beta) \} \rVert \xrightarrow{p} 0$, as $n\to\infty$,		
+		\end{center}
+		where ${\epsilon_n}$ is a positive sequence that converges to 0.
+	\end{lemma}
+
+	\noindent \textbf{Proof of lemma} \ref{lemma:1}\\
+	Let $\sigma_i=(X_i^\prime W X_i)^{1/2}, \epsilon_i^\beta=X_i\beta-log(Z_i-t_0)$, and $d_i(\beta)=sgn(\epsilon_i^\beta)\Phi(-\lvert\epsilon_i^\beta/\sigma_i\rvert)$\\
+	\begin{align*}
+	n^{1/2}\{ \tilde{S}_n(\beta, \textbf{W})-S_n)\} & = n^{-1/2} \sum_{i=1}^{n}I[Z_i \geq t_0] X_i \frac{\delta_i}{\hat{G}(Z_i)}\bigg\{ \Phi \bigg(\frac{-\epsilon_i^\beta}{\sigma_i}\bigg)-I(\epsilon_i^\beta<0) \bigg\}\\
+	& = n^{-1/2} \sum_{i=1}^{n} \frac{\delta_i}{\hat{G}(Z_i)} X_i^\star d_i(\beta)\\
+	\end{align*}
+	\noindent Where $X_i^\star = X_i I(Z_i>t_0)$.\\
+	
+	\noindent Denote $D_n(\beta)=n^{-1/2} \sum_{i=1}^{n}\frac{\delta_i}{\hat{G}(Z_i)} X_i^\star d_i(\beta)$ and $D_n^G(\beta)=n^{-1/2} \sum_{i=1}^{n} \frac{\delta_i}{G(Z_i)} X_i^\star d_i(\beta)$. It follows that
+	
+	\begin{equation} \label{eq:8}
+	D_n(\beta)=D_n^G(\beta)-n^{-1/2} \sum_{i=1}^{n}\frac{X_i^\star\delta_i(\hat{G}(Z_i)-G(Z_i))}{\hat{G}^2(Z_i)}d_i(\beta)+o_p(1)
+	\end{equation}
+	
+	\noindent Expectation of $D_n^G(\beta)$ is
+	$E\{D_n^G(\beta)\}=n^{-1/2}\sum_{i=1}^{n}X_i^\star E{d_i(\beta)}$,
+	\noindent Where 
+	\begin{align*}
+	E\{d_i(\beta)\} & = \int_{-\infty}^{\infty}sgn(\epsilon_i^\beta)\Phi(-\lvert\epsilon_i^\beta/\sigma_i\rvert)f_i\{\epsilon_i+X_i^{\star \prime}(\beta-\beta_0)\}d\epsilon_i^\beta\\
+	& = \sigma_i \int_{-\infty}^{\infty}\Phi(-\lvert t \rvert)\{2I(t>0)-1\}f_i\{\sigma_i t + X_i^{\star \prime}(\beta-\beta_0)\}dt\\
+	& = \sigma_i \int_{-\infty}^{\infty}\Phi(-\lvert t \rvert)\{2I(t>0)-1\}[f_i\{\sigma_i t + X_i^{\star \prime}(\beta-\beta_0)\}+f_i^\prime\{\omega_i^\star(t)\}\sigma_i t]dt
+	\end{align*}
+	\noindent Where $f_i$ is the density of $\epsilon_i=\epsilon_i^{\beta_0}$, and $\omega_i^\star(t)$ is between $x_i^{\star \prime} (\beta-\beta_0)$ and $X_i^{\star \prime} (\beta-\beta_0)+\sigma_i t$. Note that for $\beta$ that satisfies $\lVert \beta-\beta_0 \rVert \leq \epsilon_n$, where $\epsilon_n \to 0$, we have $\lVert X_i^{\star \prime} (\beta-\beta_0) \rVert \to 0$. It follows from assumption B1 that $sup_i f_i \{X_i^{\star \prime} (\beta-\beta_0)\}<\infty$ and since $\int_{-\infty}^{\infty} \Phi(-\lvert t \rvert)\{2I(t>0)-1\}dt=0$, we have $\int_{-\infty}^{\infty} \Phi(-\lvert t \rvert)\{2I(t>0)-1\}f_i \{X_i^{\star \prime} (\beta-\beta_0)\}dt=0$. In addition, by assumption B1, we can find $M>0$ such that $sup_i \lvert f_i^\prime \{\omega_i^\star (t)\}\rvert<M$. Thus, it follows that\\
+	
+	\begin{center}
+	$\lvert E\{d_i(\beta)\} \rvert \leq \int_{-\infty}^{\infty} \lvert t \rvert \Phi(\lvert t \rvert) \lvert f_\beta, i ^\prime \{\omega_i^\star(t)\}\rvert dt \leq M \sigma_i^2 /2$
+	\end{center}
+	
+	\noindent where the last equality holds becuase $\int_{-\infty}^{\infty} \lvert t \rvert \Phi (\{-\lvert t \rvert\})dt=1/2$.\\
+	
+	\noindent By assumption B2 and the fact that $W=O(n^{-1})$, $\sum_{i=1}^{n} \sigma_i^2=tr(X^\star W X^{\star \prime})=tr(W X^{\star \prime}X^\star)$ is bounded, and $\sum_{i=1}^{n} \lvert E\{d_i(\beta)\} \rvert \leq M \sum_{i=1}^{n}\sigma_i^2 /2$ is also bounded. Therefore,
+	
+	\begin{center}
+	$\lVert E\{D_n^G(\beta)\} \rVert \leq n^{-1/2} \sqrt{p} \sup\limits_{i,j} \lvert X_{ij}^{\star} \sum_{i=1}^{n} \lvert E\{d_i(\beta)\} \rvert \to 0,\quad \text{as}\ n\to 0.$
+	\end{center}
+	
+	\noindent In addition, by assumption B3,
+	
+	\begin{center}
+	$Var\{D_n^{G}(\beta)\} = \frac{1}{n} \sum_{i=1}^{n} X_i^\star X_i^{\star\prime} Var \Big\{ \frac{\delta_i}{G(Z_i)} d_i(\beta) \Big\} \leq \frac{1}{n}\sum_{i=1}^{n} \frac{X_i^\star X_i^{\star\prime}}{\nu}E\{d_i^2(\beta)\}$
+	\end{center}
+	
+	\noindent where
+	\begin{align*}
+	E\{d_i^2(\beta)\} & = \int_{-\infty}^{\infty}\Phi^2(-\lvert s \rvert)f_i\{\sigma_i s + X_i^\star(\beta - \beta_0)\}d(\sigma_i s)\\
+	& = \int_{\lvert s \rvert > \Delta}\Phi^2(-\lvert s \rvert)f_i\{\sigma_i s + X_i^\star(\beta - \beta_0)\}d(\sigma_i s)+\int_{\lvert s \rvert \leq \Delta}\Phi^2(-\lvert s \rvert)f_i\{\sigma_i s + X_i^\star(\beta - \beta_0)\}d(\sigma_i s)\\
+	& \leq \Phi^2(-\Delta)+\sigma_i \int_{\lvert s \rvert \leq \Delta}f_i\{\sigma_i s + X_i^\star(\beta - \beta_0)\}ds\\
+	& = \Phi^2(-\Delta)+2\sigma_i\Delta f_i(\omega_i^\star).
+	\end{align*}
+	
+	\noindent Note that $\omega_i^\star \in (X_i^{\star \prime}(\beta-\beta_0)-\sigma_i\Delta, X_i^{\star \prime}(\beta-\beta_0)+\sigma_i\Delta)$. Let $\Delta=n^{1/4}$ and since $\sigma_i = O(n^{-1/2})$, both $\sigma_i\Delta$ and $\omega_i^\star$ go to $0$ as $n$ increases. As $f_i(\cdot)$ is uniformly bounded around zero, both $\Phi^2(-\Delta)$ and $\sigma_i \Delta f_i(\omega_i^\star)$ go to $0$ as $n \to \infty$.\\
+	
+	\noindent Thus, it follows that $\lim\limits_{n \to \infty}E\{d_i^2(\beta)\}=0$, and $\lim\limits_{n \to \infty}Var\{D_n^G(\beta)\}=0$. By the Weak Law of Large Numbers, for $\beta$ that satisfies $\lVert \beta - \beta_0 \rVert \leq \epsilon_n$, we have
+	
+	\begin{equation} \label{eq:9}
+	\lVert D_n^G(\beta) \rVert \xrightarrow{p} 0, \quad \text{as}\ n\to \infty.
+	\end{equation}
+	
+	\noindent The second term on the right side of (\ref{eq:8}) can be written as\\
+	\begin{align*}
+	& n^{-1/2}\sum_{i=1}^{n} \Big\{ \frac{\delta_i X_i^\star (\hat{G}(Z_i)-G(Z_i))}{G^2(Z_i)}\Big\}d_i(\beta)+o_p(1)\\
+	&= n^{-1/2}\sum_{j=1}^{n} \int_{0}^{L} \Big\{ n^{-1} \sum_{i=1}^{n} \frac{\delta_i X_i^\star d_i(\beta Z_i(u))}{G(Z_i)}\Big\} \frac{dM_j^c(u)}{y(u)}+o_p(1)
+	\end{align*}
+	
+	\noindent where $M_i^c(u) = N_i^c(u)-\int_{0}^{t}I(Z_i\geq u)d\Lambda^c(s)$, $N_i^c(u)=(1-\delta_i)I(Z_i\leq u), \Lambda^c(u) = -log\{G(u)\}$ is the censoring cumulative hazard, $Z_i(u)=I(Z_i \geq u)$ is the ith at-risk process, and $y(u)=\lim\limits_{n \to \infty} n^{-1} \sum_{i=1}^{n} Z_i(u)$ is bounded from below in $(0,L]$ by assumption B3.\\
+	
+	\noindent Define $I_n(u,\beta)=n^{-1} \sum_{i=1}^{n}\frac{\delta_i X_i^\star d_i(\beta)Z_i(u)}{G(Z_i)}$, and $I(u,\beta)=E\{I_n(u,\beta)\}$. We have
+	\begin{center}
+		$I(u,\beta)=n^{-1} \sum_{i=1}^{n}X_i^\star E\{d_i(\beta)Z_i(u)\}$
+	\end{center}
+	Where $\lvert E\{d_i(\beta)Z_i(u)\} \rvert \leq E\lvert d_i(\beta) \rvert$, and
+	\begin{align*}
+	E\lvert d_i(\beta) \rvert & = \int_{-\infty}^{\infty} \Phi(-\lvert\epsilon_i^\beta/\sigma_i\rvert)f_i\{\epsilon_i+X_i^{\star \prime}(\beta-\beta_0)\}d\epsilon_i^\beta\\
+	& = \sigma_i \int_{-\infty}^{\infty} \Phi(-\lvert t \rvert)f_i\{\sigma_i t+X_i^{\star \prime}(\beta-\beta_0)\}dt\\
+	& = \sigma_i f_i\{X_i^{\star \prime}(\beta-\beta_0)\}\int_{-\infty}^{\infty} \Phi (- \lvert t \rvert)dt + \sigma_i^2 \int_{-\infty}^{\infty}t \Phi (- \lvert t \rvert) f_i^\prime \{\omega_i^\star(t) \}dt.
+	\end{align*}
+	
+	\noindent By assumption B1, we have $f_i\{X_i^{\star \prime}(\beta-\beta_0) \}\int_{-\infty}^{\infty}\Phi(- \lvert t \rvert)dt \leq \infty$, and \mbox{$\int_{-\infty}^{\infty} t \Phi(- \lvert t \rvert)f_i^\prime\{\omega_i^{\star} \}dt\leq \infty$}. Thus, it follows that $E\lvert d_i(\beta) \rvert=)(n^{-1/2})$, and
+	
+	\begin{center}
+		$\lVert I(u,\beta) \rVert \leq \sqrt{p} \sup\limits_{i,j} \lvert X_{ij}^{\star} \rvert n^{-1}\sum_{i=1}^{n} E \lvert d_i(\beta) \rvert = O(n^{-1/2}) \to 0$.
+	\end{center}
+	
+	\noindent Define $\mathcal{F}=\frac{\delta_i X_i^\star d_i(\beta) Z_i(u)}{G(Z_i)}, \lVert \beta - \beta_0 \rVert \leq \epsilon_n$ and $u \in (0, \infty)$. The function class $\mathcal{F}$ is Gilvenko-Cantelli (van der Vaart and Wellner, 1996) because the class of indicator functions is Gilvenko-Cantelli, and $X_i^\star, d_i(\beta), and 1/G(Z_i)$ are uniformly bounded. it follows that $sup_{\lVert \beta - \beta_0 \rVert \leq \epsilon_n, u \in (0,\infty)} \lVert I_n(u,\beta)- I(u, \beta) \rVert \xrightarrow{a.s.} 0$ and we have
+	
+	\begin{center}
+	$n^{-1/2}\sum_{j=1}^{n} \int_{0}^{L}I_n(u,\beta)\frac{dM_j^c(u)}{y(u)}=n^{-1/2}\sum_{j=1}^{n}\int_{0}^{L}I(u,\beta)\frac{dM_j^c(u)}{y(u)}+o_p(1)$
+	\end{center}
+	
+	\noindent By the Martingale Central Limit Theorem (Fleming and Harrington, 1991), $n^{-1/2}\sum_{j=1}^{n}\int_{u}^{\beta}\frac{dM_j^c(u)}{y(u)}$ is $o_p(1)$ as n goes to infinity. It follows that, for $\beta$ that satisfies $\lVert \beta - \beta_0 \rVert \leq \epsilon_n$,
+	
+	\begin{equation} \label{eq:10}
+	\Bigg\lVert n^{-1/2} \sum_{j=1}^{n} \int_{0}^{L} I_n(u,\beta)\frac{dM_j^c(u)}{y(u)} \Bigg\rVert \xrightarrow{p} 0
+	\end{equation}
+	
+	\noindent Collating (\ref{eq:9}) and (\ref{eq:10}), we have
+	\begin{center}
+	$\sup\limits_{\lVert \beta - \beta_0 \rVert \leq \epsilon_n} \lVert {n^{1/2}} \{ \tilde{S}_n(\beta, \textbf{W})-S_n(\beta) \} \rVert \xrightarrow{p} 0$.
+	\end{center}
+	
+	\noindent for any $\beta$ such that $\lVert \beta - \beta_0 \rVert \leq \epsilon_n$. Lemma 2 is thus proven by the fact that both $\tilde{S}_n(\beta, \textbf{W})$ and $S_n(\beta)$ are monotone functions, thus the point-wise covergence could be strengthened to uniform convergence (Shorack and Wellner, 1986).\\
+	
+	\noindent \textbf{Proof of Theorem \ref{thm:1}}\\
+	After applying induced smoothing method, $\hat{\beta}_{IS} = \beta_0+\textbf{H}^{1/2}V$ where $\textbf{H}=n^{-1}\Gamma$ and $V \sim\mathcal{N}(0,I_p)$.
+	Since $\hat{\beta}_{IS}$ is a solution of
+	
+	\begin{equation} \label{eq:11}
+	\tilde{U}_n(\hat{\beta}_{IS}, \tilde{\textbf{H}})= n^{-1} \sum_{i=1}^{n} I[Z_i \geq t_0] X_i \Bigg\{\tau -  \frac{\delta_i}{\hat{G}(Z_i)}\Phi\Bigg(\frac{X_i^\prime\hat{\beta}_{IS}-log(Z_i-t_0)}{\sqrt{X_i^{\prime} \tilde{\textbf{H}}X_{i}}}\Bigg) \Bigg\}=0
+	\end{equation}
+	
+	\noindent Using Taylor expansion, we have
+	
+	\begin{equation} \label{eq:12}
+	\sqrt{n}(\hat{\beta}_{IS}-\beta_0) = \frac{-\sqrt{n}\tilde{U}_n(\beta_0, \tilde{\textbf{H}})}{\tilde{U}_n^{\prime}(\beta_0,\tilde{\textbf{H}})}
+	\end{equation}
+	
+	\noindent By Lemma (\ref{lemma:1}), $-\sqrt{n}\tilde{U}_n(\beta_0, \tilde{\textbf{H}}) \xrightarrow{p} -\sqrt{n}\tilde{U}(\beta_0)$, and Kim et al (2012) shows $-\sqrt{n}\tilde{U}(\beta_0) \xrightarrow{d} \mathcal{N}(0,\Sigma)$. Since $\tilde{\textbf{H}}=O(n^{-1})$, $\tilde{U}_n^{\prime}(\hat{\beta_0},\tilde{\textbf{H}})=\tilde{A}_n(\beta_0, \tilde{\textbf{H}}) \xrightarrow{p} A$. In sum,
+	$\sqrt{n}(\hat{\beta}_{IS}-\beta_0) \xrightarrow{d} \mathcal{N}(0,\Gamma)$, where $\Gamma = A^{-1}\Sigma A^{-1}$.
+	
+\end{document}
+	
+	
