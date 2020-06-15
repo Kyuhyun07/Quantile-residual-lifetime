@@ -1,0 +1,12 @@
+ndata1 : datasize : 200, simulation : 2000, quantile : 25%, beta0, 1 both effective
+ndata2 : datasize : 200, simulation : 2000, quantile : 50%, beta0, 1 both effective
+ndata3 : datasize : 200, simulation : 2000, quantile : 75%, beta0, 1 both effective
+ndata4 : datasize : 200, simulation : 2000, quantile : 25%, only beta0 effective
+ndata5 : datasize : 200, simulation : 2000, quantile : 50%, only beta0 effective
+ndata6 : datasize : 200, simulation : 2000, quantile : 75%, only beta0 effective
+ndata7 : datasize : 400, simulation : 2000, quantile : 25%, beta0, 1 both effective
+ndata8 : datasize : 400, simulation : 2000, quantile : 50%, beta0, 1 both effective
+ndata9 : datasize : 400, simulation : 2000, quantile : 75%, beta0, 1 both effective
+ndata10 : datasize : 400, simulation : 2000, quantile : 25%, only beta0 effective
+ndata11 : datasize : 400, simulation : 2000, quantile : 50%, only beta0 effective
+ndata12 : datasize : 400, simulation : 2000, quantile : 75%, only beta0 effective
