@@ -1,0 +1,181 @@
+\documentclass[12pt]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{array}
+
+
+\newcommand{\E}{\mathop{\rm E}\nolimits} %expectation
+\newcommand{\SE}{\mathop{\rm SE}\nolimits} %Standard Errors
+\newcommand{\Var}{\mathop{\rm Var}\nolimits} %variance
+\newcommand{\var}{\mathop{\rm var}\nolimits} %variance
+
+\pagestyle{plain}
+\setcounter{secnumdepth}{0}
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Solution}
+\newtheorem{summary}[theorem]{Summary}
+\begin{document}
+	\title{50th Quantile estimation\\
+		$\beta_0, \beta_1$ effective\\
+		datasize = 200\\
+		simulation = 2000}
+	\maketitle
+	\newpage
+	\begin{enumerate}
+		\item Rq with weight using $G(T)$ (WKM jump weight)
+		\begin{table}[hbt!]
+			\caption{rq with $G(T)$ : $t_0=0$}
+			\centering
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+				\hline
+				\multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta_0$} & \multicolumn{4}{c|}{$\beta_1$}\\ \cline{2-9}
+				 & $\beta_0$ & SE & SD  & Coverage  & $\beta_1$ & SE & SD & Coverage\\
+				\hline\hline
+				0 & 1.611 & 0.074 & 0.072 & 0.942 & 0.685 & 0.106 & 0.100 & 0.962 \\ 
+  10 & 1.608 & 0.077 & 0.075 & 0.940 & 0.691 & 0.113 & 0.104 & 0.963 \\ 
+  30 & 1.609 & 0.084 & 0.081 & 0.938 & 0.689 & 0.139 & 0.119 & 0.971 \\ 
+  50 & 1.608 & 0.102 & 0.098 & 0.944 & 0.694 & 0.239 & 0.168 & 0.989 \\ 
+  70 & 1.606 & 0.163 & 0.225 & 0.871 & 0.499 & 0.311 & 0.391 & 0.857 \\ 
+				\hline
+			\end{tabular}
+		\end{table}
+		\begin{table}[hbt!]
+			\caption{rq with $G(T)$ : $t_0=1$}
+			\centering
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+				\hline
+				\multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta_0$} & \multicolumn{4}{c|}{$\beta_1$}\\ \cline{2-9}
+				& $\beta_0$ & SE & SD  & Coverage  & $\beta_1$ & SE & SD & Coverage\\
+				\hline\hline
+				0 & 1.413 & 0.090 & 0.089 & 0.937 & 0.785 & 0.123 & 0.117 & 0.948 \\ 
+  10 & 1.410 & 0.094 & 0.092 & 0.941 & 0.787 & 0.132 & 0.126 & 0.947 \\ 
+  30 & 1.408 & 0.104 & 0.099 & 0.942 & 0.795 & 0.167 & 0.140 & 0.971 \\ 
+  50 & 1.407 & 0.130 & 0.126 & 0.945 & 0.801 & 0.286 & 0.206 & 0.986 \\ 
+  70 & 1.396 & 0.211 & 0.303 & 0.843 & 0.487 & 0.383 & 0.515 & 0.811 \\ 
+				\hline
+			\end{tabular}
+		\end{table}
+		\begin{table}[hbt!]
+			\caption{rq with $G(T)$ : $t_0=2$}
+			\centering
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+				\hline
+				\multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta_0$} & \multicolumn{4}{c|}{$\beta_1$}\\ \cline{2-9}
+				& $\beta_0$ & SE & SD  & Coverage  & $\beta_1$ & SE & SD & Coverage\\
+				\hline\hline
+				0 & 1.218 & 0.108 & 0.103 & 0.942 & 0.879 & 0.144 & 0.135 & 0.951 \\ 
+  10 & 1.217 & 0.114 & 0.107 & 0.947 & 0.881 & 0.154 & 0.143 & 0.955 \\ 
+  30 & 1.213 & 0.127 & 0.120 & 0.950 & 0.891 & 0.198 & 0.163 & 0.977 \\ 
+  50 & 1.212 & 0.164 & 0.159 & 0.949 & 0.903 & 0.335 & 0.255 & 0.986 \\ 
+  70 & 1.173 & 0.259 & 0.362 & 0.830 & 0.529 & 0.465 & 0.604 & 0.816 \\
+				\hline
+			\end{tabular}
+		\end{table}
+		\begin{table}[hbt!]
+			\caption{rq with $G(T)$ : $t_0=3$}
+			\centering
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+				\hline
+				\multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta_0$} & \multicolumn{4}{c|}{$\beta_1$}\\ \cline{2-9}
+				& $\beta_0$ & SE & SD  & Coverage  & $\beta_1$ & SE & SD & Coverage\\
+				\hline\hline
+				0 & 1.046 & 0.127 & 0.124 & 0.939 & 0.954 & 0.164 & 0.157 & 0.931 \\ 
+  10 & 1.037 & 0.137 & 0.132 & 0.934 & 0.970 & 0.179 & 0.170 & 0.934 \\ 
+  30 & 1.038 & 0.155 & 0.146 & 0.944 & 0.967 & 0.235 & 0.190 & 0.972 \\ 
+  50 & 1.035 & 0.208 & 0.209 & 0.935 & 0.978 & 0.389 & 0.326 & 0.976 \\ 
+  70 & 0.954 & 0.315 & 0.418 & 0.843 & 0.595 & 0.553 & 0.673 & 0.834 \\ 
+				\hline
+			\end{tabular}
+		\end{table}
+	
+		\newpage
+		
+			\item Rq with weight using $G(T|T>t_0)$ (WKM jump weight)
+		\begin{table}[hbt!]
+			\caption{rq with $G(T|T>t_0)$ : $t_0=0$}
+			\centering
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+				\hline
+				\multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta_0$} & \multicolumn{4}{c|}{$\beta_1$}\\ \cline{2-9}
+				& $\beta_0$ & SE & SD  & Coverage  & $\beta_1$ & SE & SD & Coverage\\
+				\hline\hline
+				0 & 1.611 & 0.074 & 0.072 & 0.942 & 0.685 & 0.107 & 0.100 & 0.960 \\ 
+  10 & 1.608 & 0.077 & 0.075 & 0.942 & 0.691 & 0.114 & 0.104 & 0.967 \\ 
+  30 & 1.609 & 0.084 & 0.081 & 0.939 & 0.689 & 0.139 & 0.119 & 0.971 \\ 
+  50 & 1.608 & 0.102 & 0.098 & 0.941 & 0.694 & 0.239 & 0.168 & 0.990 \\ 
+  70 & 1.606 & 0.163 & 0.225 & 0.878 & 0.499 & 0.310 & 0.391 & 0.856 \\ 
+				\hline
+			\end{tabular}
+		\end{table}
+		\begin{table}[hbt!]
+			\caption{rq with $G(T|T>t_0)$ : $t_0=1$}
+			\centering
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+				\hline
+				\multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta_0$} & \multicolumn{4}{c|}{$\beta_1$}\\ \cline{2-9}
+				& $\beta_0$ & SE & SD  & Coverage  & $\beta_1$ & SE & SD & Coverage\\
+				\hline\hline
+				0 & 1.413 & 0.090 & 0.089 & 0.933 & 0.785 & 0.123 & 0.117 & 0.945 \\ 
+  10 & 1.410 & 0.094 & 0.092 & 0.941 & 0.787 & 0.132 & 0.126 & 0.946 \\ 
+  30 & 1.408 & 0.105 & 0.099 & 0.941 & 0.795 & 0.168 & 0.140 & 0.970 \\ 
+  50 & 1.407 & 0.130 & 0.126 & 0.949 & 0.801 & 0.286 & 0.206 & 0.987 \\ 
+  70 & 1.396 & 0.210 & 0.303 & 0.846 & 0.487 & 0.383 & 0.515 & 0.813 \\ 
+				\hline
+			\end{tabular}
+		\end{table}
+		\begin{table}[hbt!]
+			\caption{rq with $G(T|T>t_0)$ : $t_0=2$}
+			\centering
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+				\hline
+				\multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta_0$} & \multicolumn{4}{c|}{$\beta_1$}\\ \cline{2-9}
+				& $\beta_0$ & SE & SD  & Coverage  & $\beta_1$ & SE & SD & Coverage\\
+				\hline\hline
+				0 & 1.218 & 0.108 & 0.103 & 0.940 & 0.879 & 0.144 & 0.135 & 0.950 \\ 
+  10 & 1.217 & 0.114 & 0.107 & 0.948 & 0.881 & 0.154 & 0.143 & 0.954 \\ 
+  30 & 1.213 & 0.127 & 0.120 & 0.950 & 0.891 & 0.197 & 0.163 & 0.975 \\ 
+  50 & 1.212 & 0.164 & 0.159 & 0.948 & 0.903 & 0.335 & 0.255 & 0.985 \\ 
+  70 & 1.173 & 0.258 & 0.362 & 0.832 & 0.529 & 0.464 & 0.604 & 0.819 \\ 
+				\hline
+			\end{tabular}
+		\end{table}
+		\begin{table}[hbt!]
+			\caption{rq with $G(T|T>t_0)$ : $t_0=3$}
+			\centering
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+				\hline
+				\multirow{2}{*}{censor} & \multicolumn{4}{c|}{$\beta_0$} & \multicolumn{4}{c|}{$\beta_1$}\\ \cline{2-9}
+				& $\beta_0$ & SE & SD  & Coverage  & $\beta_1$ & SE & SD & Coverage\\
+				\hline\hline
+				0 & 1.046 & 0.128 & 0.124 & 0.940 & 0.954 & 0.164 & 0.157 & 0.931 \\ 
+  10 & 1.037 & 0.137 & 0.132 & 0.939 & 0.970 & 0.179 & 0.170 & 0.935 \\ 
+  30 & 1.038 & 0.155 & 0.146 & 0.946 & 0.967 & 0.235 & 0.190 & 0.971 \\ 
+  50 & 1.035 & 0.208 & 0.209 & 0.943 & 0.978 & 0.389 & 0.326 & 0.973 \\ 
+  70 & 0.954 & 0.315 & 0.418 & 0.847 & 0.595 & 0.553 & 0.673 & 0.839 \\ 
+				\hline
+			\end{tabular}
+		\end{table}
+\end{enumerate}
+\end{document}
+	
